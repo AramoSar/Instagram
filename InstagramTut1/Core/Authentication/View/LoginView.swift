@@ -28,7 +28,7 @@ struct LoginView: View {
                         .textInputAutocapitalization(.none)
                         .modifier(IGTextFieldModifier())
                     
-                    SecureField("Enter your email", text: $viewModel.password)
+                    SecureField("Enter your password", text: $viewModel.password)
                         .font(.subheadline)
                         .padding(12)
                         .background(Color(.systemGray6))
