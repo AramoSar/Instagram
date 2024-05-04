@@ -9,17 +9,14 @@ import SwiftUI
 
 struct ProfileHeaderView: View {
     let user: User
+    @State private var showEditProfile = false
     
     var body: some View {
         VStack(spacing: 10){
             
             // pic and stats
             HStack {
-                Image(user.profileImageUrl ?? "")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 80, height: 80)
-                    .clipShape(Circle())
+                CircularProfileImageView(user: user, size: .large)
                 
                 Spacer()
                 
@@ -47,24 +44,35 @@ struct ProfileHeaderView: View {
                         .font(.footnote)
                 }
                 
-                Text(user.username )
-                
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
             
             // action button
-            Text("Edit Profile")
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .frame(width: 360, height: 32)
-                .foregroundStyle(.black)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(.gray, lineWidth: 1)
-                )
+            Button {
+                if user.isCurrentUser {
+                    showEditProfile.toggle()
+                } else {
+                    print("Follow user..")
+                }
+            } label: {
+                Text(user.isCurrentUser ? "Edit Profile" : "Follow")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .frame(width: 360, height: 32)
+                    .background(user.isCurrentUser ? .white : Color(.systemBlue))
+                    .foregroundStyle(user.isCurrentUser ? .black : .white)
+                    .cornerRadius(6)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(user.isCurrentUser ? .gray : .clear, lineWidth: 1)
+                    )
+            }
             
             Divider()
+        }
+        .fullScreenCover(isPresented: $showEditProfile) {
+            EditProfileView(user: user)
         }
     }
 }
